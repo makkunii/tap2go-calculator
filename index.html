@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Calculator</title>
+    <link rel="stylesheet" href="style.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+   <div class="wrapper">
+       <div>
+       
+        <div class="container">
+            <img src="https://tap2go-ph.com/storage/app/public/business/2023-07-21-64ba63d46d058.png" width="100px" class="inline-elements">
+            <h1 class="inline-elements">Order Calculator</h1>
+          </div>
+
+        <br>
+      
+        <div>
+            <div>
+                <div>
+                    <div class="container-display">
+                        <p id="total_item_amount_warning" style="text-align: center;">Calculator for Tap2Go Food Delivery</p>
+                    </div>
+                    <h2>Commission Rate</h2>
+                    <label for="commission_rate">Enter Commission Rate</label>
+                    <input type="number" step="0.01" id="commission_rate" placeholder="decimal" value="0.15">
+                </div>
+            
+                <div>
+                    <h2>Delivery Fee</h2>
+                    <label for="delivery_fee">Enter Delivery Fee:</label>
+                    <input type="number" step="0.01" id="delivery_fee" value="40">
+                </div>
+            </div>
+        </div>
+        
+     
+         <!-- Section for calculating by Total Item Amount -->
+         <h2>Calculate by Total Item Amount</h2>
+         <label for="total_item_amount">Enter Total Item Amount:</label>
+         <input type="number" id="total_item_amount"><br><br>
+         <button onclick="calculateOrderByItemAmount()">Calculate</button>
+         <br><br>
+        
+         <div class="container-display">
+             <p id="total_item_amount_display"></p>
+             <p id="delivery_fee_display"></p>
+             <p id="total_order_amount_display"></p>
+             <p id="admin_commission_display"></p>
+             <p id="rider_commission_display"></p>
+             <p id="admin_net_income_display"></p>
+             <p id="restaurant_net_income_display"></p>
+         </div>
+     
+         <!-- Section for calculating by Restaurant Net Income -->
+         <h2>Calculate by Restaurant Net Income</h2>
+         <label for="restaurant_net_income">Enter Restaurant Net Income:</label>
+         <input type="number" id="restaurant_net_income" ><br><br>
+         <button onclick="calculateOrderByRestaurantNetIncome()">Calculate</button>
+         <br><br>
+     
+         <div class="container-display">
+             <p id="total_item_amount_display_2"></p>
+             <p id="delivery_fee_display_2"></p>
+             <p id="total_order_amount_display_2"></p>
+             <p id="admin_commission_display_2"></p>
+             <p id="rider_commission_display_2"></p>
+             <p id="admin_net_income_display_2"></p>
+             <p id="restaurant_net_income_display_2"></p>
+         </div>
+       </div>
+   </div>
+
+    <script>
+        function calculateOrderByItemAmount() {
+            const totalItemAmount = parseFloat(document.getElementById('total_item_amount').value);
+
+            if (isNaN(totalItemAmount) || totalItemAmount <= 0) {
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Total Item Amount.";
+                return;
+            }
+
+            document.getElementById('total_item_amount_warning').innerText = "Calculator for Tap2Go Food Delivery";
+
+            const commissionRate = parseFloat(document.getElementById('commission_rate').value);
+            const deliveryFee = parseFloat(document.getElementById('delivery_fee').value);
+
+            if (isNaN(commissionRate) || commissionRate <= 0 || commissionRate > 1) {
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Commission Rate (as a decimal).";
+                return;
+            }
+
+            if (isNaN(deliveryFee) || deliveryFee < 0) {
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Delivery Fee.";
+                return;
+            }
+
+            const totalOrderAmount = totalItemAmount + deliveryFee;
+            const adminCommission = totalItemAmount * commissionRate;
+            const riderCommission = (2 * deliveryFee) / 100;
+            const adminNetIncome = adminCommission + riderCommission;
+            const restaurantNetIncome = totalItemAmount - adminCommission;
+
+            document.getElementById('total_item_amount_display').innerText = `Total Item Amount: P${totalItemAmount.toFixed(2)}`;
+            document.getElementById('delivery_fee_display').innerText = `Delivery Fee: P${deliveryFee.toFixed(2)}`;
+            document.getElementById('total_order_amount_display').innerText = `Total Order Amount: P${totalOrderAmount.toFixed(2)}`;
+            document.getElementById('admin_commission_display').innerText = `Admin Commission: P${adminCommission.toFixed(2)}`;
+            document.getElementById('rider_commission_display').innerText = `Rider Commission: P${riderCommission.toFixed(2)}`;
+            document.getElementById('admin_net_income_display').innerText = `Admin Net Income: P${adminNetIncome.toFixed(2)}`;
+            document.getElementById('restaurant_net_income_display').innerText = `Restaurant Net Income: P${restaurantNetIncome.toFixed(2)}`;
+        }
+
+        function calculateOrderByRestaurantNetIncome() {
+            const restaurantNetIncome = parseFloat(document.getElementById('restaurant_net_income').value);
+
+            if (isNaN(restaurantNetIncome) || restaurantNetIncome <= 0) {
+                document.getElementById('total_item_amount_display_2').innerText = "";
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Restaurant Net Income.";
+                return;
+            }
+
+            document.getElementById('total_item_amount_warning').innerText = "Calculator for Tap2Go Food Delivery";
+
+            const commissionRate = parseFloat(document.getElementById('commission_rate').value);
+            const deliveryFee = parseFloat(document.getElementById('delivery_fee').value);
+
+            if (isNaN(commissionRate) || commissionRate <= 0 || commissionRate > 1) {
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Commission Rate (as a decimal).";
+                return;
+            }
+
+            if (isNaN(deliveryFee) || deliveryFee < 0) {
+                document.getElementById('total_item_amount_warning').innerText = "Please enter a valid Delivery Fee.";
+                return;
+            }
+
+            const totalItemAmount = restaurantNetIncome / (1 - commissionRate);
+            const totalOrderAmount = totalItemAmount + deliveryFee;
+            const adminCommission = totalItemAmount * commissionRate;
+            const riderCommission = (2 * deliveryFee) / 100;
+            const adminNetIncome = adminCommission + riderCommission;
+
+            document.getElementById('total_item_amount_display_2').innerText = `Total Item Amount: P${totalItemAmount.toFixed(2)}`;
+            document.getElementById('delivery_fee_display_2').innerText = `Delivery Fee: P${deliveryFee.toFixed(2)}`;
+            document.getElementById('total_order_amount_display_2').innerText = `Total Order Amount: P${totalOrderAmount.toFixed(2)}`;
+            document.getElementById('admin_commission_display_2').innerText = `Admin Commission: P${adminCommission.toFixed(2)}`;
+            document.getElementById('rider_commission_display_2').innerText = `Rider Commission: P${riderCommission.toFixed(2)}`;
+            document.getElementById('admin_net_income_display_2').innerText = `Admin Net Income: P${adminNetIncome.toFixed(2)}`;
+            document.getElementById('restaurant_net_income_display_2').innerText = `Restaurant Net Income: P${restaurantNetIncome.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
